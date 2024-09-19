@@ -1,6 +1,7 @@
 This repository is Part 1 of Vercidium's [Free Friday](https://www.patreon.com/posts/100857028) series.
 
-You can get access to the full Vercidium Engine source code by joining [my Patreon](https://www.patreon.com/vercidium) or sponsoring me on [GitHub sponsors](https://github.com/vercidium-patreon).
+You can get access to the full Vercidium Engine source code by joining [my Patreon](https://www.patreon.com/vercidium)
+or sponsoring me on [GitHub sponsors](https://github.com/vercidium-patreon).
 
 ---
 
@@ -8,7 +9,11 @@ This is a standlone voxel renderer that uses greedy meshing to generate a simpli
 
 This project uses Silk.NET so it *should* be cross-platform, but I've only tested it on Windows.
 
+**Fork**: \
+On linux run `sudo apt install libglfw3` to install the required library.
+
 Key files:
+
 - `ChunkMeshActual.cs` contains the greedy meshing algorithm
 - `Program.cs` contains the main entry point
 - `Client.cs` contains the render loop

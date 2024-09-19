@@ -1,11 +1,17 @@
-﻿using Silk.NET.Input;
+﻿using Silk.NET.GLFW;
+using Silk.NET.Input;
 using Silk.NET.Windowing;
+using Silk.NET.Windowing.Glfw;
 
 namespace meshing;
 
 public unsafe partial class Client
 {
     public Client() {
+        // Use GLFW for linux
+        GlfwWindowing.Use();
+        GlfwProvider.GLFW.Value.WindowHint(WindowHintContextApi.ContextCreationApi, ContextApi.EglContextApi);
+
         // Create a Silk.NET window
         var options = WindowOptions.Default;
         options.API                      = new GraphicsAPI(ContextAPI.OpenGL, new APIVersion(3, 3));

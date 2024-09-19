@@ -7,15 +7,13 @@ public unsafe partial class MapRenderer
     public float cameraPitch;
     public float cameraYaw;
 
-    public MapRenderer()
-    {
+    public MapRenderer() {
         m = new Map(64, 64, 64);
 
 
         // Create hills
         for (int x = 0; x < 64; x++)
-            for (int z = 0; z < 64; z++)
-            {
+            for (int z = 0; z < 64; z++) {
                 var height = 1 + (int)((MathF.Sin(x / 8.0f) + 1) * 4) + (int)((MathF.Sin(z / 4.0f) + 1) * 4);
 
                 for (int y = 0; y < height; y++)
@@ -23,43 +21,37 @@ public unsafe partial class MapRenderer
             }
     }
 
-    public void Render()
-    { 
+    public void Render() {
         // Determine chunk rendering order for best front-to-back rendering on the GPU
-        int startX, endX, xStep, startZ, endZ, zStep;
+        int startX,      endX, xStep, startZ, endZ, zStep;
         int xAccessStep, zAccessStep;
         var lookAt = Helper.FromPitchYaw(cameraPitch, cameraYaw);
 
-        if (lookAt.X > 0)
-        {
-            startX = 0;
-            endX = m.ChunkAmountX;
-            xStep = 1;
+        if (lookAt.X > 0) {
+            startX      = 0;
+            endX        = m.ChunkAmountX;
+            xStep       = 1;
             xAccessStep = Constants.ChunkSize;
         }
-        else
-        {
-            startX = Math.Max(0, m.ChunkAmountX - 1);
-            endX = -1;
-            xStep = -1;
+        else {
+            startX      = Math.Max(0, m.ChunkAmountX - 1);
+            endX        = -1;
+            xStep       = -1;
             xAccessStep = -Constants.ChunkSize;
         }
 
-        if (lookAt.Z > 0)
-        {
-            startZ = 0;
-            endZ = m.ChunkAmountZ;
-            zStep = 1;
+        if (lookAt.Z > 0) {
+            startZ      = 0;
+            endZ        = m.ChunkAmountZ;
+            zStep       = 1;
             zAccessStep = Constants.ChunkSizeSquared;
         }
-        else
-        {
-            startZ = Math.Max(0, m.ChunkAmountZ - 1);
-            endZ = -1;
-            zStep = -1;
+        else {
+            startZ      = Math.Max(0, m.ChunkAmountZ - 1);
+            endZ        = -1;
+            zStep       = -1;
             zAccessStep = -Constants.ChunkSizeSquared;
         }
-
 
 
         // Loop over every chunk in the current range
@@ -67,16 +59,13 @@ public unsafe partial class MapRenderer
         //  These access variables are needed because m.meshChunks is a 1-dimensional array
         var chunkAccessZ = startZ * Constants.ChunkSizeSquared;
 
-        for (int k = startZ; k != endZ; k += zStep, chunkAccessZ += zAccessStep)
-        {
+        for (int k = startZ; k != endZ; k += zStep, chunkAccessZ += zAccessStep) {
             var chunkAccessX = startX * Constants.ChunkSize;
 
-            for (int i = startX; i != endX; i += xStep, chunkAccessX += xAccessStep)
-            {
+            for (int i = startX; i != endX; i += xStep, chunkAccessX += xAccessStep) {
                 var chunkAccess = chunkAccessZ + chunkAccessX;
 
-                for (int j = 0; j < m.ChunkAmountY; j++)
-                {
+                for (int j = 0; j < m.ChunkAmountY; j++) {
                     var c = m.meshChunks[chunkAccess++];
 
 
@@ -90,8 +79,7 @@ public unsafe partial class MapRenderer
 
 
                     // Render the chunk (if meshed successfully)
-                    if (c.voxelBuffer != null)
-                    {
+                    if (c.voxelBuffer != null) {
                         VoxelShader.worldPosition.Set3(c.WorldPos);
                         c.voxelBuffer.BindAndDraw();
                     }
@@ -100,8 +88,7 @@ public unsafe partial class MapRenderer
         }
     }
 
-    protected void MeshChunk(ChunkMesh c)
-    {
+    protected void MeshChunk(ChunkMesh c) {
         // If not dirty, don't mesh
         if (!c.chunk->IsDirty())
             return;

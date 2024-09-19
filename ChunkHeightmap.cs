@@ -1,10 +1,8 @@
 ﻿namespace meshing;
 
-
 public unsafe partial struct Chunk
 {
-    public void OnVoxelAdded(int i, int j, int k)
-    {
+    public void OnVoxelAdded(int i, int j, int k) {
         int access = GetHeightmapAccess(i, k);
 
         if (j < *(minAltitude + access))
@@ -15,12 +13,11 @@ public unsafe partial struct Chunk
             *max = (byte)j;
     }
 
-    public void OnVoxelRemoved(int i, int j, int k)
-    {
+    public void OnVoxelRemoved(int i, int j, int k) {
         // Precalculate 1D array accesses
-        var hAccess = GetHeightmapAccess(i, k);
+        var hAccess  = GetHeightmapAccess(i, k);
         var xzAccess = i * Constants.ChunkSize + k * Constants.ChunkSizeSquared;
-        var access = xzAccess + j;
+        var access   = xzAccess                + j;
 
         // Update the min
         UpdateMinHeightmap(j, hAccess, access, xzAccess);
@@ -29,8 +26,7 @@ public unsafe partial struct Chunk
         UpdateMaxHeightmap(j, hAccess, access, xzAccess);
     }
 
-    void UpdateMinHeightmap(int j, int hAccess, int access, int xzAccess)
-    {
+    void UpdateMinHeightmap(int j, int hAccess, int access, int xzAccess) {
         var min = minAltitude + hAccess;
 
 
@@ -41,13 +37,12 @@ public unsafe partial struct Chunk
 
         // Calculate how far up to search
         var chunkTop = xzAccess + Constants.ChunkSize;
-        var amount = chunkTop - access;
-        var ptr = voxels + access;
+        var amount   = chunkTop - access;
+        var ptr      = voxels   + access;
 
 
         // Search up until we find a voxel
-        for (; amount > 0; amount--)
-        {
+        for (; amount > 0; amount--) {
             if (ptr++->index == 0)
                 continue;
 
@@ -61,8 +56,7 @@ public unsafe partial struct Chunk
         *min = (byte)Constants.ChunkSize;
     }
 
-    void UpdateMaxHeightmap(int j, int hAccess, int access, int xzAccess)
-    {
+    void UpdateMaxHeightmap(int j, int hAccess, int access, int xzAccess) {
         var max = maxAltitude + hAccess;
 
 
@@ -73,13 +67,12 @@ public unsafe partial struct Chunk
 
         // Calculate how far down to search
         var chunkBottom = xzAccess;
-        var amount = access - chunkBottom;
-        var ptr = voxels + access;
+        var amount      = access - chunkBottom;
+        var ptr         = voxels + access;
 
 
         // Search down until we find a voxel
-        for (; amount > 0; amount--)
-        {
+        for (; amount > 0; amount--) {
             if (ptr--->index == 0)
                 continue;
 

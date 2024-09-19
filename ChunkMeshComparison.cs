@@ -4,11 +4,9 @@ public unsafe partial class ChunkMesh
 {
     protected unsafe bool DrawFaceCommon(Voxel* ptr) => ptr->index == 0;
 
-    protected unsafe bool DrawFaceXN(int j, Voxel* voxelData, bool min, int kCS2)
-    {
+    protected unsafe bool DrawFaceXN(int j, Voxel* voxelData, bool min, int kCS2) {
         // If it is outside this chunk, get the voxel from the neighbouring chunk
-        if (min)
-        {
+        if (min) {
             // If no chunk next to us, render
             if (!chunkXN->Allocated)
                 return true;
@@ -20,10 +18,8 @@ public unsafe partial class ChunkMesh
     }
 
 
-    protected unsafe bool DrawFaceXP(int j, Voxel* voxelData, bool max, int kCS2)
-    {
-        if (max)
-        {
+    protected unsafe bool DrawFaceXP(int j, Voxel* voxelData, bool max, int kCS2) {
+        if (max) {
             // If no chunk next to us, render
             if (!chunkXP->Allocated)
                 return true;
@@ -35,10 +31,8 @@ public unsafe partial class ChunkMesh
     }
 
 
-    protected unsafe bool DrawFaceYN(Voxel* voxelData, bool min, int iCS, int kCS2)
-    {
-        if (min)
-        {
+    protected unsafe bool DrawFaceYN(Voxel* voxelData, bool min, int iCS, int kCS2) {
+        if (min) {
             // If there's no chunk below us, render
             if (!chunkYN->Allocated)
                 return true;
@@ -50,10 +44,8 @@ public unsafe partial class ChunkMesh
     }
 
 
-    protected unsafe bool DrawFaceYP(Voxel* voxelData, bool max, int iCS, int kCS2)
-    {
-        if (max)
-        {
+    protected unsafe bool DrawFaceYP(Voxel* voxelData, bool max, int iCS, int kCS2) {
+        if (max) {
             // If there's no chunk above us, render
             if (!chunkYP->Allocated)
                 return true;
@@ -65,10 +57,8 @@ public unsafe partial class ChunkMesh
     }
 
 
-    protected unsafe bool DrawFaceZN(int j, Voxel* voxelData, bool min, int iCS)
-    {
-        if (min)
-        {
+    protected unsafe bool DrawFaceZN(int j, Voxel* voxelData, bool min, int iCS) {
+        if (min) {
             // if there's no chunk next to us, render
             if (!chunkZN->Allocated)
                 return true;
@@ -80,10 +70,8 @@ public unsafe partial class ChunkMesh
     }
 
 
-    protected unsafe bool DrawFaceZP(int j, Voxel* voxelData, bool max, int iCS)
-    {
-        if (max)
-        {
+    protected unsafe bool DrawFaceZP(int j, Voxel* voxelData, bool max, int iCS) {
+        if (max) {
             // If no chunk next to us, render
             if (!chunkZP->Allocated)
                 return true;

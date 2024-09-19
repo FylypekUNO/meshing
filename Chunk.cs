@@ -3,8 +3,7 @@
 public unsafe partial struct Chunk
 {
     // Client
-    public void Reset(int cx, int cy, int cz, bool fake)
-    {
+    public void Reset(int cx, int cy, int cz, bool fake) {
         // Ensure we were disposed properly before being re-allocated
         Assert(!Allocated);
 
@@ -17,7 +16,7 @@ public unsafe partial struct Chunk
 
         // Allocate voxel data
         bytes_voxels = Constants.BYTES_PER_CHUNK;
-        voxels = (Voxel*)Allocator.AllocZeroed(bytes_voxels);
+        voxels       = (Voxel*)Allocator.AllocZeroed(bytes_voxels);
         SetDirty();
 
 
@@ -29,8 +28,8 @@ public unsafe partial struct Chunk
         // To speed up meshing, each chunk stores two heightmaps, which contain the min and max altitude of each column in the chunk.
         //  This saves looping over the whole chunk when meshing
         bytes_maxAltitude = bytes_minAltitude = Constants.ChunkSizeSquared;
-        minAltitude = (byte*)Allocator.AllocZeroed(bytes_minAltitude);
-        maxAltitude = (byte*)Allocator.AllocZeroed(bytes_maxAltitude);
+        minAltitude       = (byte*)Allocator.AllocZeroed(bytes_minAltitude);
+        maxAltitude       = (byte*)Allocator.AllocZeroed(bytes_maxAltitude);
 
 
         // Prepare the min heightmap
@@ -39,8 +38,7 @@ public unsafe partial struct Chunk
             *ptr++ = Constants.ChunkSize;
     }
 
-    public void SetVoxel(int x, int y, int z, byte index)
-    {
+    public void SetVoxel(int x, int y, int z, byte index) {
         var i = WorldToLocal(x);
         var j = WorldToLocal(y);
         var k = WorldToLocal(z);
@@ -63,15 +61,14 @@ public unsafe partial struct Chunk
 
 
     // Shortcut functions
-    public void SetDirty() => dirty = true;
+    public void SetDirty()   => dirty = true;
     public void UnsetDirty() => dirty = false;
-    public bool IsDirty() => dirty;
+    public bool IsDirty()    => dirty;
 
-    public static int WorldToLocal(int a) => a & Constants.ChunkMask;
+    public static int WorldToLocal(int       a)        => a & Constants.ChunkMask;
     public static int GetHeightmapAccess(int i, int k) => i | (k * Constants.ChunkSize);
 
-    public static int GetAccessLocal(int i, int j, int k)
-    {
+    public static int GetAccessLocal(int i, int j, int k) {
         Assert(i >= 0);
         Assert(j >= 0);
         Assert(k >= 0);

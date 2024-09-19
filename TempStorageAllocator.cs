@@ -9,27 +9,23 @@ public static unsafe class TempStorageAllocator<T> where T : unmanaged
 
     static BlockingCollection<TempMeshData<T>> storage = new();
 
-    public static TempMeshData<T> Get()
-    {
+    public static TempMeshData<T> Get() {
         // Reuse
         if (storage.TryTake(out var data))
             return data;
-        
+
         // Burst
         return new();
     }
 
-    public static void Recycle(ref TempMeshData<T> data)
-    {
-        if (data == null)
-        {
+    public static void Recycle(ref TempMeshData<T> data) {
+        if (data == null) {
             AssertFalse();
             return;
         }
 
         // Dispose burst data rather than keeping them around forever
-        if (storage.Count >= BURST_THRESHOLD)
-        {
+        if (storage.Count >= BURST_THRESHOLD) {
             data.Dispose();
             data = null;
             return;

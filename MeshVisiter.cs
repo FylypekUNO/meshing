@@ -4,7 +4,7 @@ public unsafe class MeshVisiter
 {
     const int BYTES = sizeof(int) * Constants.VOXELS_PER_CHUNK;
 
-    public int Comparison = 1;
+    public int  Comparison = 1;
     public int* visitXN;
     public int* visitXP;
     public int* visitZN;
@@ -12,8 +12,7 @@ public unsafe class MeshVisiter
     public int* visitYN;
     public int* visitYP;
 
-    public MeshVisiter()
-    {
+    public MeshVisiter() {
         visitXN = (int*)Allocator.AllocZeroed(BYTES);
         visitXP = (int*)Allocator.AllocZeroed(BYTES);
         visitZN = (int*)Allocator.AllocZeroed(BYTES);
@@ -22,8 +21,7 @@ public unsafe class MeshVisiter
         visitYP = (int*)Allocator.AllocZeroed(BYTES);
     }
 
-    public void Dispose()
-    {
+    public void Dispose() {
         Allocator.Free(ref visitXN);
         Allocator.Free(ref visitXP);
         Allocator.Free(ref visitZN);

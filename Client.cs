@@ -5,52 +5,48 @@ namespace meshing;
 
 public unsafe partial class Client
 {
-    public Client()
-    {
+    public Client() {
         // Create a Silk.NET window
         var options = WindowOptions.Default;
-        options.API = new GraphicsAPI(ContextAPI.OpenGL, new APIVersion(3, 3));
-        options.Position = new(200, 200);
+        options.API                      = new GraphicsAPI(ContextAPI.OpenGL, new APIVersion(3, 3));
+        options.Position                 = new(200, 200);
         options.PreferredDepthBufferBits = 32;
 
         window = Window.Create(options);
 
         // Callback when the window is created
-        window.Load += () =>
-        {
+        window.Load += () => {
             // Create an OpenGL Context
             Gl = window.CreateOpenGL();
             OnDidCreateOpenGLContext();
 
 
             // Precalculate input stuff
-            inputContext = window.CreateInput();
-            keyboard = inputContext.Keyboards[0];
-            mouse = inputContext.Mice[0];
+            inputContext          = window.CreateInput();
+            keyboard              = inputContext.Keyboards[0];
+            mouse                 = inputContext.Mice[0];
             mouse.DoubleClickTime = 1;
         };
 
         window.Render += (_) => Render();
 
-        window.Size = new(1920, 1080);
-        window.FramesPerSecond = 144;
+        window.Size             = new(1920, 1080);
+        window.FramesPerSecond  = 144;
         window.UpdatesPerSecond = 144;
-        window.VSync = false;
+        window.VSync            = false;
 
         // Initialise OpenGL and input context
         window.Initialize();
     }
 
 
-    public void Run()
-    {
+    public void Run() {
         // Run forever
         window.Run();
     }
 
 
-    void OnDidCreateOpenGLContext()
-    {
+    void OnDidCreateOpenGLContext() {
         var major = Gl.GetInteger(GetPName.MajorVersion);
         var minor = Gl.GetInteger(GetPName.MinorVersion);
 
@@ -70,12 +66,10 @@ public unsafe partial class Client
 #endif
     }
 
-    void Render()
-    {
-        if (firstRender)
-        {
-            cameraPos = new Vector3(0, 18, 0) - Helper.FromPitchYaw(cameraPitch, cameraYaw) * 32;
-            lastMouse = mouse.Position;
+    void Render() {
+        if (firstRender) {
+            cameraPos   = new Vector3(0, 18, 0) - Helper.FromPitchYaw(cameraPitch, cameraYaw) * 32;
+            lastMouse   = mouse.Position;
             firstRender = false;
         }
 
@@ -83,7 +77,7 @@ public unsafe partial class Client
         // Mouse movement
         var diff = lastMouse - mouse.Position;
 
-        cameraYaw -= diff.X * 0.003f;
+        cameraYaw   -= diff.X * 0.003f;
         cameraPitch += diff.Y * 0.003f;
 
         lastMouse = mouse.Position;
@@ -107,7 +101,6 @@ public unsafe partial class Client
         else if (keyboard.IsKeyPressed(Key.Q))
             cameraPos += Helper.FromPitchYaw(-MathF.PI / 2, 0) * movementSpeed;
 
-        
 
         // Prepare OpenGL
         PreRenderSetup();
@@ -121,13 +114,12 @@ public unsafe partial class Client
 
         // Render the map
         mapRenderer.cameraPitch = cameraPitch;
-        mapRenderer.cameraYaw = cameraYaw;
+        mapRenderer.cameraYaw   = cameraYaw;
 
         mapRenderer.Render();
     }
 
-    public void PreRenderSetup()
-    {
+    public void PreRenderSetup() {
         // Prepare rendering
         Gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         Gl.Enable(EnableCap.DepthTest);
@@ -152,8 +144,7 @@ public unsafe partial class Client
         Gl.Viewport(0, 0, (uint)window.Size.X, (uint)window.Size.Y);
     }
 
-    protected Matrix4x4 GetViewProjection()
-    {
+    protected Matrix4x4 GetViewProjection() {
         var view = Helper.CreateFPSView(cameraPos, cameraPitch, cameraYaw);
         var proj = Matrix4x4.CreatePerspectiveFieldOfView(FieldOfView, Aspect, NearPlane, FarPlane);
 
@@ -164,13 +155,12 @@ public unsafe partial class Client
 #if DEBUG
     static DebugProc debugDelegate;
 
-    static unsafe void DebugCallback(GLEnum source, GLEnum type, int id, GLEnum severity, int length, nint messageInt, nint userParam)
-    {
+    static unsafe void DebugCallback(GLEnum source, GLEnum type, int id, GLEnum severity, int length, nint messageInt,
+                                     nint   userParam) {
         // TODO
         var message = Marshal.PtrToStringAnsi(messageInt);
 
-        if (message == "Pixel-path performance warning: Pixel transfer is synchronized with 3D rendering.")
-        {
+        if (message == "Pixel-path performance warning: Pixel transfer is synchronized with 3D rendering.") {
             // TODO: Use proper id for this
             return;
         }
@@ -197,19 +187,18 @@ public unsafe partial class Client
 #endif
 
 
-
     // Silk
-    IWindow window;
-    IMouse mouse;
-    IKeyboard keyboard;
+    IWindow       window;
+    IMouse        mouse;
+    IKeyboard     keyboard;
     IInputContext inputContext;
 
 
     // Camera
     Vector2 lastMouse;
     Vector3 cameraPos;
-    float cameraPitch = -MathF.PI / 6;
-    float cameraYaw = MathF.PI / 4;
+    float   cameraPitch = -MathF.PI / 6;
+    float   cameraYaw   = MathF.PI  / 4;
 
 
     // Rendering
@@ -218,7 +207,7 @@ public unsafe partial class Client
     float FieldOfView = 50.0f / 180.0f * MathF.PI;
     float Aspect => window.Size.X / (float)window.Size.Y;
     float NearPlane = 1.0f;
-    float FarPlane = 256.0f;
+    float FarPlane  = 256.0f;
 
     // Voxel data
     MapRenderer mapRenderer;

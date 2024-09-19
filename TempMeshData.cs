@@ -9,18 +9,15 @@ public unsafe class TempMeshData<T> where T : unmanaged
 
     public int Length => (int)(write - data);
 
-    public TempMeshData()
-    {
+    public TempMeshData() {
         data = (T*)Allocator.Alloc(sizeof(T) * MAX_SIZE);
     }
 
-    public void PreMeshing()
-    {
+    public void PreMeshing() {
         write = data;
     }
 
-    public void Dispose()
-    {
+    public void Dispose() {
         Allocator.Free(ref data);
         write = null;
     }

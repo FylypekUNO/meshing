@@ -3,20 +3,18 @@
 public static class VoxelShader
 {
     public static ShaderProgram shader;
-    public static bool Active => shader?.Active ?? false;
+    public static bool          Active => shader?.Active ?? false;
 
-    public static void Initialise()
-    {
+    public static void Initialise() {
         shader = new(VertexShader, FragmentShader);
 
-        mvp = new(shader, "mvp");
+        mvp           = new(shader, "mvp");
         worldPosition = new(shader, "worldPosition");
         showWireframe = new(shader, "showWireframe");
     }
 
 
-    public static void UseProgram()
-    {
+    public static void UseProgram() {
         if (shader == null)
             Initialise();
 

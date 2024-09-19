@@ -5,8 +5,7 @@ public unsafe partial struct Voxel
 {
     public byte index;
 
-    public void Reset(byte i)
-    {
+    public void Reset(byte i) {
         index = i;
     }
 }

@@ -6,9 +6,9 @@ public unsafe partial class ChunkMesh
 
     // Store a reference to the linked chunk and its neighbours
     public Chunk* chunk;
-    Chunk* chunkXN, chunkXP, chunkYN, chunkYP, chunkZN, chunkZP;
+    Chunk*        chunkXN, chunkXP, chunkYN, chunkYP, chunkZN, chunkZP;
 
-    public MeshVisiter meshVisiter;
+    public MeshVisiter               meshVisiter;
     public TempMeshData<VoxelVertex> tempMeshData;
 
     public VoxelVertexBuffer voxelBuffer;
@@ -22,31 +22,30 @@ public unsafe partial class ChunkMesh
     public Vector3 WorldPos;
 
 
-    public ChunkMesh(Map m, Chunk* c)
-    {
+    public ChunkMesh(Map m, Chunk* c) {
         Assert(c != null);
         Assert(c->Allocated);
 
         this.m = m;
-        chunk = c;
+        chunk  = c;
 
-        WorldPos = new(chunkPosX * Constants.ChunkSize, chunkPosY * Constants.ChunkSize, chunkPosZ * Constants.ChunkSize);
+        WorldPos = new(chunkPosX * Constants.ChunkSize, chunkPosY * Constants.ChunkSize,
+                       chunkPosZ * Constants.ChunkSize);
 
         GetNeighbourReferences();
     }
 
-    public void GetNeighbourReferences()
-    {
-        var chunkAccess = m.GetAccessLocal(chunkPosX, chunkPosY, chunkPosZ);
+    public void GetNeighbourReferences() {
+        var chunkAccess   = m.GetAccessLocal(chunkPosX, chunkPosY, chunkPosZ);
         var exteriorChunk = m.ShouldMeshExterior ? Map.EMPTY_CHUNK : Map.FULL_CHUNK;
 
-        chunkXN = chunkPosX > 0 ? m.chunks + chunkAccess - CHUNK_STEP_X : exteriorChunk;
+        chunkXN = chunkPosX > 0 ? m.chunks + chunkAccess  - CHUNK_STEP_X : exteriorChunk;
         chunkXP = chunkPosX < m.ChunkAmountXM1 ? m.chunks + chunkAccess + CHUNK_STEP_X : exteriorChunk;
 
-        chunkYN = chunkPosY > 0 ? m.chunks + chunkAccess - CHUNK_STEP_Y : exteriorChunk;
+        chunkYN = chunkPosY > 0 ? m.chunks + chunkAccess  - CHUNK_STEP_Y : exteriorChunk;
         chunkYP = chunkPosY < m.ChunkAmountYM1 ? m.chunks + chunkAccess + CHUNK_STEP_Y : exteriorChunk;
 
-        chunkZN = chunkPosZ > 0 ? m.chunks + chunkAccess - CHUNK_STEP_Z : exteriorChunk;
+        chunkZN = chunkPosZ > 0 ? m.chunks + chunkAccess  - CHUNK_STEP_Z : exteriorChunk;
         chunkZP = chunkPosZ < m.ChunkAmountZM1 ? m.chunks + chunkAccess + CHUNK_STEP_Z : exteriorChunk;
     }
 

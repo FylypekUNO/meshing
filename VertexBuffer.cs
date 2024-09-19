@@ -2,8 +2,7 @@
 
 public unsafe abstract class VertexBuffer<T> where T : unmanaged
 {
-    public VertexBuffer(uint vertexSize)
-    {
+    public VertexBuffer(uint vertexSize) {
         this.vertexSize = vertexSize;
 
         // Create a VAO
@@ -25,15 +24,13 @@ public unsafe abstract class VertexBuffer<T> where T : unmanaged
         UnbindVBO();
     }
 
-    public void BindAndDraw()
-    {
+    public void BindAndDraw() {
         BindVAO();
         Gl.DrawArrays(primitiveType, 0, (uint)size);
         UnbindVAO();
     }
 
-    public void BufferData(int size, T* data)
-    {
+    public void BufferData(int size, T* data) {
         this.size = size;
 
         BindVBO();
@@ -43,7 +40,7 @@ public unsafe abstract class VertexBuffer<T> where T : unmanaged
 
 
     // GPU data
-    public int size;
+    public    int  size;
     protected uint vertexSize;
 
 

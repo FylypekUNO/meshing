@@ -2,11 +2,10 @@
 
 public unsafe partial class Map
 {
-    public Map(int mx, int my, int mz)
-    {
+    public Map(int mx, int my, int mz) {
         // Always allocate 32x32x32 chunks, even though we don't use them all
         bytes_chunks = Marshal.SizeOf<Chunk>() * Constants.MaxChunkAmountCubed;
-        chunks = (Chunk*)Allocator.AllocZeroed(bytes_chunks);
+        chunks       = (Chunk*)Allocator.AllocZeroed(bytes_chunks);
 
         // Ensure map size is divisible by 32
         Assert(mx % Constants.ChunkSize == 0);
@@ -17,9 +16,9 @@ public unsafe partial class Map
         MapSizeY = my;
         MapSizeZ = mz;
 
-        ChunkAmountX = MapSizeX / Constants.ChunkSize;
-        ChunkAmountY = MapSizeY / Constants.ChunkSize;
-        ChunkAmountZ = MapSizeZ / Constants.ChunkSize;
+        ChunkAmountX   = MapSizeX / Constants.ChunkSize;
+        ChunkAmountY   = MapSizeY / Constants.ChunkSize;
+        ChunkAmountZ   = MapSizeZ / Constants.ChunkSize;
         ChunkAmountXM1 = ChunkAmountX - 1;
         ChunkAmountYM1 = ChunkAmountY - 1;
         ChunkAmountZM1 = ChunkAmountZ - 1;
@@ -27,11 +26,11 @@ public unsafe partial class Map
 
     public bool OutOfBounds(int x, int y, int z) => (uint)x >= MapSizeX || (uint)y >= MapSizeY || (uint)z >= MapSizeZ;
 
-    public int GetAccess(int x, int y, int z) => GetAccessLocal(x >> Constants.ChunkShift, y >> Constants.ChunkShift, z >> Constants.ChunkShift);
-    public int GetAccessLocal(int f, int g, int h)
-    {
-        if ((uint)f >= ChunkAmountX || (uint)g >= ChunkAmountY || (uint)h >= ChunkAmountZ)
-        {
+    public int GetAccess(int x, int y, int z) =>
+        GetAccessLocal(x >> Constants.ChunkShift, y >> Constants.ChunkShift, z >> Constants.ChunkShift);
+
+    public int GetAccessLocal(int f, int g, int h) {
+        if ((uint)f >= ChunkAmountX || (uint)g >= ChunkAmountY || (uint)h >= ChunkAmountZ) {
             AssertFalse();
             return -1;
         }
@@ -43,8 +42,7 @@ public unsafe partial class Map
         return y0 | x0 | z0;
     }
 
-    public void AddVoxel(int x, int y, int z, byte index)
-    {
+    public void AddVoxel(int x, int y, int z, byte index) {
         if (OutOfBounds(x, y, z))
             return;
 
@@ -57,8 +55,7 @@ public unsafe partial class Map
         c->SetVoxel(x, y, z, index);
     }
 
-    public Chunk* InitChunk(int x, int y, int z)
-    {
+    public Chunk* InitChunk(int x, int y, int z) {
         // i, j, k are voxel positions within a chunk
         // f, g, h are chunk positions
         // x, y, z are global voxel positions
@@ -69,12 +66,11 @@ public unsafe partial class Map
 
         // Precalculate
         var chunkAccess = GetAccessLocal(f, g, h);
-        var c = chunks + chunkAccess;
+        var c           = chunks + chunkAccess;
 
 
         // If already initialised, return it
-        if (c->Allocated)
-        {
+        if (c->Allocated) {
             Assert(meshChunks[chunkAccess] != null);
             return c;
         }
@@ -101,8 +97,8 @@ public unsafe partial class Map
     public ChunkMesh[] meshChunks = new ChunkMesh[Constants.MaxChunkAmountCubed];
 
     public long meshingTime;
-    public int meshSize;
-    public int meshedChunkCount;
+    public int  meshSize;
+    public int  meshedChunkCount;
 
 
     // Map dimensions
@@ -121,12 +117,11 @@ public unsafe partial class Map
 
 
     // Chunk data
-    public int bytes_chunks;
+    public int    bytes_chunks;
     public Chunk* chunks;
 
 
     // Meshing settings
     public bool ShouldMeshExterior = true;
     public bool ShouldMeshBetweenChunks;
-
 }
